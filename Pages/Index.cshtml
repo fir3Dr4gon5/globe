@@ -2,8 +2,6 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Globe";
-    ViewData["Time"] = DateTime.Now.ToString("HH:mm");
-    ViewData["Date"] = DateTime.Now.ToString("dd MMMM yyyy");
 }﻿
 <head>
     <meta charset="utf-8" />
@@ -14,7 +12,7 @@
 
 <script>
   function initialize() {
-       var options = {atmosphere: true, center: [0, 0], zoom: 2.5};
+       var options = {atmosphere: true, center: [0, 0], zoom:4};
         var earth = new WE.map('earth_div', options);
         WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
           minZoom: 0,
@@ -51,13 +49,15 @@
         <div id="top-left">
 	
 	<font size="36" color="white">
-            Time: @ViewData["Time"]
+            Time: <span id="lblTime" ></span>
         </font></div>
 	
         <div id="top-right">
 	
 		<font size="36" color="white">
-                 @ViewData["Date"]
+		
+		<span id="lblDate" ></span>
+
                 </font>
 	</div>
 
@@ -86,6 +86,88 @@
 <!--    <script
 src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+
+<script>
+/* IFFE */
+
+(function() {
+    'use strict';
+    
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+         console.log('init..');
+	 init();
+	 console.log('Running..');
+    });
+    
+    var timer = setInterval(change, 20000);
+    
+    function change() {
+    
+         updateTimeLabel()
+    }
+    
+    function init() {
+    
+	 updateTimeLabel();       
+    }
+   
+   function updateTimeLabel(){
+   
+         var time = getCurrentTime();
+	 var lblTime = document.getElementById("lblTime");
+	 lblTime.innerHTML = time;
+	 
+	 var date = getCurrentDate();
+	 var lblDate = document.getElementById("lblDate");
+	 lblDate.innerHTML = date;
+   }
+   
+   
+   function getCurrentTime() {
+   
+         var date = new Date();
+	 var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+	 var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+	 var time = hours + ":" + minutes;
+	 
+         
+	 return time;
+	
+   }
+   
+   function getCurrentDate() {
+   
+       const date = new Date();
+       const month = date.toLocaleString('default', { month: 'long' });
+       var day = suffix(date.getDate() ) ;
+       var dateString = day + " " + month + " " + date.getFullYear(); 
+       return dateString;
+   }
+              
+   function suffix(i) { 
+        var j = i % 10, k = i % 100; 
+	
+	if (j == 1 && k != 11) { 
+	    return i + "st"; 
+	} 
+	if (j == 2 && k != 12) { 
+	    return i  + "nd"; 
+	} 
+	if (j == 3 && k != 13) { 
+	    return i + "rd"; 
+	} 
+	return i +  "th";
+    }
+    
+    
+ })();
+
+
+
+</script>
 
 </body>
 
