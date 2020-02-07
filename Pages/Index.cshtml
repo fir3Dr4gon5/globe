@@ -22,7 +22,12 @@
 	
 	var marker = WE.marker([54.6, -6]).addTo(earth);	
 	marker.bindPopup("<b>Home!</b>", {maxWidth: 150, closeButton:true}).openPopup();
-              
+
+
+	var vol1003 = WE.marker([-5.05, 151.33]).addTo(earth);	
+	vol1003.bindPopup("<b>ulawun</b>", {maxWidth: 120,closeButton:true}).openPopup();
+	
+
 
           // Start a simple rotation animation
         var before = null;
@@ -30,7 +35,7 @@
             var c = earth.getPosition();
             var elapsed = before? now - before: 0;
             before = now;
-            earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
+            earth.setCenter([c[0], c[1] - 0.1*(elapsed/30)]);
             requestAnimationFrame(animate);
         });
 
@@ -49,7 +54,8 @@
         <div id="top-left">
 	
 	<font size="36" color="white">
-            Time: <span id="lblTime" ></span>
+            <div>Time: <span id="lblTime" ></span></div>
+	    <div>CPU Temp: <span id="lblCpuTemp" ></span></div>
         </font></div>
 	
         <div id="top-right">
@@ -71,9 +77,7 @@
 
         </div>
         <div id="center-below">
-
-
-	      
+	    <span id="lblMessage"></span>	      
         </div>
 
         <div id="bottom-left"></div>
@@ -83,14 +87,13 @@
 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<!--    <script
-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
+    <!--    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="~/js/site.js" asp-append-version="true"></script>
 
 
 
 <script>
-/* IFFE */
+/* IIFE */
 
 (function() {
     'use strict';
@@ -106,12 +109,14 @@ src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
     
     function change() {
     
-         updateTimeLabel()
+         updateTimeLabel();
+ 	 getCpuTemp();
     }
     
     function init() {
     
-	 updateTimeLabel();       
+	 updateTimeLabel();
+	 getCpuTemp();
     }
    
    function updateTimeLabel(){
@@ -162,15 +167,16 @@ src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
 	return i +  "th";
     }
     
+    function getCpuTemp(){
+
+	    fetch('/api/CpuTemp')
+	      .then (response => response.json())
+	        .then ( result  => {
+		    $("#lblCpuTemp").html( Math.trunc(result[0].cpu1_temp))
+		})
+		.catch(error => $("#lblMessage").html("Web API Error: " +error));
+    }
     
  })();
-
-
-
 </script>
-
 </body>
-
-
-
-
