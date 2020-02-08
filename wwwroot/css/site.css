@@ -209,3 +209,23 @@ input, textarea {
  {
    color:black;
  }
+ 
+ 
+ /* Heads up Display */
+ .panel {
+   background-color: #202020; /* Dark purple */
+   opacity: 0.75;
+   border-radius: 4px;
+   margin: 12px;
+   border: 10px solid #FFD708;
+   border-radius: 10px 40px 10px 40px;
+
+ }
+ 
+ .panel-text {
+   color: #fff;
+   opacity: 1.0;
+   font-size: 40px;
+   text-shadow: 3px 3px 3px #888;
+   padding: 12px;
+ }

@@ -12,7 +12,7 @@
 
 <script>
   function initialize() {
-       var options = {atmosphere: true, center: [0, 0], zoom:4};
+       var options = {atmosphere: true, center: [0, 0], zoom:3.8};
         var earth = new WE.map('earth_div', options);
         WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
           minZoom: 0,
@@ -52,19 +52,19 @@
     <div id="earth_div" style="position: relative;min-height: 100%; height: 100%;"></div>
     <div class="container">
         <div id="top-left">
-	
-	<font size="36" color="white">
-            <div>Time: <span id="lblTime" ></span></div>
-	    <div>CPU Temp: <span id="lblCpuTemp" ></span></div>
-        </font></div>
+	    <div class="panel">
+	       <div class="panel-text">
+	            <div>CPU Temp: <span id="lblCpuTemp" ></span></div>
+                </div>
+	    </div>
+	</div>
 	
         <div id="top-right">
-	
-		<font size="36" color="white">
-		
-		<span id="lblDate" ></span>
-
-                </font>
+	    <div class="panel">
+	       <div class="panel-text">		
+		   <span id="lblDate" ></span>
+		</div>
+	    </div>
 	</div>
 
 	</div>
@@ -80,7 +80,14 @@
 	    <span id="lblMessage"></span>	      
         </div>
 
-        <div id="bottom-left"></div>
+        <div id="bottom-left">
+	    <div class="panel">
+	        <div class="panel-text">
+                    <div>Time: <span id="lblTime" ></span></div>		
+		</div>
+	    </div>
+
+	</div>
         <div id="bottom" style="color:steelblue"></div>
         <div id="bottom-right"></div>
     </div>
@@ -105,19 +112,31 @@
 	 console.log('Running..');
     });
     
+    function init() {
+    
+        fireUpdates();
+    }
+    
     var timer = setInterval(change, 20000);
     
     function change() {
     
+        fireUpdates();
+    }
+    
+    function fireUpdates()
+    {
+    	 clearMessage();
          updateTimeLabel();
- 	 getCpuTemp();
+ 	 getCpuTemp();           
     }
     
-    function init() {
-    
-	 updateTimeLabel();
-	 getCpuTemp();
-    }
+
+   function clearMessage()
+   {
+       // reset previous message
+       $("#lblMessage").html("");
+   }
    
    function updateTimeLabel(){
    
