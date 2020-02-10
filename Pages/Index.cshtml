@@ -1,7 +1,9 @@
-﻿@page
+@page
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
 @model IndexModel
 @{
     ViewData["Title"] = "Globe";
+    
 }﻿
 <head>
     <meta charset="utf-8" />
@@ -11,40 +13,11 @@
     <script src="http://www.webglearth.com/v2/api.js"></script>
 
 <script>
-  function initialize() {
-       var options = {atmosphere: true, center: [0, 0], zoom:3.8};
-        var earth = new WE.map('earth_div', options);
-        WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
-          minZoom: 0,
-          maxZoom: 5,
-          attribution: 'NASA'
-        }).addTo(earth);
-	
-	var marker = WE.marker([54.6, -6]).addTo(earth);	
-	marker.bindPopup("<b>Home!</b>", {maxWidth: 150, closeButton:true}).openPopup();
-
-
-	var vol1003 = WE.marker([-5.05, 151.33]).addTo(earth);	
-	vol1003.bindPopup("<b>ulawun</b>", {maxWidth: 120,closeButton:true}).openPopup();
-	
-
-
-          // Start a simple rotation animation
-        var before = null;
-        requestAnimationFrame(function animate(now) {
-            var c = earth.getPosition();
-            var elapsed = before? now - before: 0;
-            before = now;
-            earth.setCenter([c[0], c[1] - 0.1*(elapsed/30)]);
-            requestAnimationFrame(animate);
-        });
-
-      }
 </script>
 
 </head>
 
-<body onload="initialize()">
+<body>
     <ul id="background" class="background">
         <li class="fadein" style="background-image: url('images/stars-bkg.jpg');"></li>
     </ul>
@@ -88,8 +61,14 @@
 	    </div>
 
 	</div>
-        <div id="bottom" style="color:steelblue"></div>
-        <div id="bottom-right"></div>
+        <div id="bottom" ></div>
+        <div id="bottom-right">
+	    <div class="panel">
+	       <div class="panel-text">
+                   <div><span id="lblWeather" ></span></div>		
+		</div>
+	    </div>
+	</div>
     </div>
 
 
@@ -105,15 +84,23 @@
 (function() {
     'use strict';
     
-
+     var _  = {
+	 i :  0,
+	 earth : undefined,
+	 city : '@Configuration["Weather:City"]' 
+	 
+     };
+          
     window.addEventListener('DOMContentLoaded', (event) => {
          console.log('init..');
 	 init();
 	 console.log('Running..');
+	 
     });
     
     function init() {
-    
+        init_globe();
+	init_markers();
         fireUpdates();
     }
     
@@ -126,11 +113,59 @@
     
     function fireUpdates()
     {
-    	 clearMessage();
-         updateTimeLabel();
- 	 getCpuTemp();           
+
+       fireFastUpdates();       
+       if (_.i % 20 == 0 ) {
+           fireSlowUpdates();
+       }       
+       _.i++;
+       
     }
     
+    function fireFastUpdates()
+    {
+         console.log("fireFastUpdates:" + _.i);
+    	 clearMessage();
+         updateTimeLabel();
+
+    }
+    
+    function fireSlowUpdates()
+    {
+         console.log("fireSlowUpdates:" + _.i);
+   	 getCpuTemp();           
+	 getWeather();
+	 updateVolcanos()
+    }
+    
+  function init_globe() {
+       var options = {atmosphere: true, center: [0, 0], zoom:3.5};
+       _.earth = new WE.map('earth_div', options);
+        WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
+          minZoom: 0,
+          maxZoom: 5,
+          attribution: 'NASA'
+        }).addTo(_.earth);
+	
+
+          // Start a simple rotation animation
+        var before = null;
+        requestAnimationFrame(function animate(now) {
+            var c = _.earth.getPosition();
+            var elapsed = before? now - before: 0;
+            before = now;
+            _.earth.setCenter([c[0], c[1] - 0.05*(elapsed/30)]);
+            requestAnimationFrame(animate);
+        });
+
+      }
+      
+   function init_markers()
+   {
+	var marker = WE.marker([54.6, -6]).addTo(_.earth);	
+	marker.bindPopup("<b>Home!</b>", {maxWidth: 150, closeButton:true}).openPopup();
+	     
+   }
 
    function clearMessage()
    {
@@ -193,8 +228,40 @@
 	        .then ( result  => {
 		    $("#lblCpuTemp").html( Math.trunc(result[0].cpu1_temp))
 		})
-		.catch(error => $("#lblMessage").html("Web API Error: " +error));
+		.catch(error => $("#lblMessage").html("CpuTemp API Error: " +error));
     }
+    
+    
+    function getWeather(){
+        
+	     fetch('/api/Weather/City/'+ _.city)
+	      .then (response => response.json())
+	        .then ( result  => {
+		    $("#lblWeather")
+		    .html(`${_.city}: ${result.temp} &deg;C <br/>${result.summary}` )
+		    })
+		.catch(error => $("#lblMessage").html("Weather API Error: " +error));
+    }
+    
+    function getVolcanos(){
+        return fetch('/api/Volcano')
+	  .then (response => response.json())
+ 	.catch(error => $("#lblMessage").html("Volcanos API Error: " +error));
+
+    }
+    function updateVolcanos(){
+    
+        var promise  = getVolcanos();
+	promise.then ( volcanos => {
+	    volcanos.forEach(function (o, index) {
+	        var marker = WE.marker([o.lat, o.lon]).addTo(_.earth);	
+	        marker.bindPopup(`<b>${o.name}</b>`, {closeButton:false}).openPopup();	      
+	    });
+	});
+	  
+    }
+   
+   
     
  })();
 </script>

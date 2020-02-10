@@ -1,0 +1,82 @@
+[
+        {
+            "damage": 3,
+            "day": 26,
+            "key": 1003,
+            "lat": -5.05,
+            "lon": 151.33,
+            "month": 6,
+            "name": "ulawun",
+            "year": 2019
+        },
+        {
+            "damage": 2,
+            "day": 7,
+            "key": 1002,
+            "lat": 3.17,
+            "lon": 98.392,
+            "month": 5,
+            "name": "sinabung",
+            "year": 2019
+        },
+        {
+            "damage": 0,
+            "day": 3,
+            "key": 1005,
+            "lat": 38.789,
+            "lon": 15.213,
+            "month": 7,
+            "name": "stromboli",
+            "year": 2019
+        },
+        {
+            "damage": 2,
+            "day": 28,
+            "key": 1004,
+            "lat": -4.1,
+            "lon": 145.061,
+            "month": 6,
+            "name": "Manam",
+            "year": 2019
+        },
+        {
+            "damage": 4,
+            "day": 12,
+            "key": 1008,
+            "lat": 14.002,
+            "lon": 120.993,
+            "month": 1,
+            "name": "Taal",
+            "year": 2020
+        },
+        {
+            "damage": 0,
+            "day": 9,
+            "key": 1007,
+            "lat": -37.52,
+            "lon": 177.18,
+            "month": 12,
+            "name": "white Island",
+            "year": 2019
+        },
+        {
+            "damage": 0,
+            "day": 28,
+            "key": 1006,
+            "lat": 38.789,
+            "lon": 15.213,
+            "month": 8,
+            "name": "Stromboil",
+            "year": 2019
+        },
+        {
+            "damage": 1,
+            "day": 7,
+            "key": 1001,
+            "lat": -4.1,
+            "lon": 145.06,
+            "month": 1,
+            "name": "Manam",
+            "year": 2019
+        }
+    ]
