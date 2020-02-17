@@ -53,30 +53,29 @@
 	    <span id="lblMessage"></span>	      
         </div>
 
-        <div id="bottom-left">
-	    <div class="panel">
-	        <div class="panel-text">
-                    <div>Time: <span id="lblTime" ></span></div>		
-		</div>
+        <div class="wrap">	
+            <div id="bottom-left">
+	         <div class="panel">
+	             <div class="panel-text">
+                         <div>Time: <span id="lblTime" ></span></div>		
+		     </div>
+	         </div>
+	    </div>	
+            <div id="bottom"></div>	    
+            <div id="bottom-right">
+	        <div class="panel">
+	           <div class="panel-text">
+                       <div><span id="lblWeather" ></span></div>		
+		   </div>
+	        </div>
 	    </div>
 
-	</div>
-        <div id="bottom" ></div>
-        <div id="bottom-right">
-	    <div class="panel">
-	       <div class="panel-text">
-                   <div><span id="lblWeather" ></span></div>		
-		</div>
-	    </div>
-	</div>
+        </div>
     </div>
-
-
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <!--    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-
 
 <script>
 /* IIFE */
@@ -248,7 +247,7 @@
 	promise.then ( volcanos => {
 	    volcanos.forEach(function (o, index) {
 	        var marker = WE.marker([o.lat, o.lon]).addTo(_.earth);	
-	        marker.bindPopup(`<font size="12pt"><b>${o.name}</b></font>`, { closeButton:false}).openPopup();	      
+	        marker.bindPopup(`<font><b>${o.name}</b></font>`, {maxWidth:90,closeButton:false}).openPopup();
 	    });
 	});	  
     }
