@@ -99,7 +99,7 @@
     
     function init() {
         init_globe();
-	init_markers();
+	    init_markers();
         fireUpdates();
     }
     
@@ -138,7 +138,7 @@
     }
     
   function init_globe() {
-       var options = {atmosphere: true, center: [0, 0], zoom:3.5};
+       var options = {atmosphere: true, center: [30, 6], zoom:3.5};
        _.earth = new WE.map('earth_div', options);
         WE.tileLayer('http://tileserver.maptiler.com/nasa/{z}/{x}/{y}.jpg', {
           minZoom: 0,
